@@ -2,12 +2,18 @@ const {User} = require('../models')
 
 module.exports = {
     async register (req,res){ // this replies to a register api request
+        const rawUser = req.body
         try {
-            const user = await User.create(req.body)  // create a user object from the email/paasword submitted
-            res.send(user.toJSON())     // send the new user object to front end
+            console.log( 'new user data', rawUser)
+            const user = await User.create(rawUser)  // create a user object from the email/paasword submitted
+            return res.send({
+                user: user.toJSON(), // send the new user object to front end
+                success: `User account succesfully created for ${user.email}!`
+            })
         } catch(err) {
-            res.status(400).send({
-                error: 'This email account already in use' ,
+            console.log(`This email account ${rawUser.email} already in use`,err)
+            return res.status(400).send({
+                error: `This email account ${rawUser.email} already in use` ,
                 original: err
             })
         }
@@ -31,7 +37,7 @@ module.exports = {
                 })
             }
             return res.send({
-                message: 'Succesful login',
+                success: `User ${user.email} succesfully logged in`,
                 user: user.toJSON()
             })     // send the new user object to front end
         } catch(err) {

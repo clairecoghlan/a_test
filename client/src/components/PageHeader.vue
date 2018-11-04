@@ -1,7 +1,7 @@
 <template lang="pug">
     v-toolbar(fixed dark).cyan
       v-toolbar-title
-        span(@click="routeTo ('home')").clickable Car Share
+        span(@click="routeTo ('/')").clickable Car Share
       v-toolbar-items
         v-btn(flat dark) Browse
       v-spacer

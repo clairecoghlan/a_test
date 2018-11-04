@@ -6,10 +6,10 @@ const AuthenticationController = require('../controllers/AuthenticationControlle
 // validation for controller as middleware
 const AuthenticationControllerPolicy = require('../policies/AuthenticationControllerPolicy')
 
-/* GET home page. */
-router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' , message : 'Hello World I think' });
-});
+// /* GET home page. */
+// router.get('/', function(req, res, next) {
+//   res.render('index', { title: 'Express' , message : 'Hello World I think' });
+// });
 
 router.post('/register' ,
     AuthenticationControllerPolicy.register, // validate in middleware

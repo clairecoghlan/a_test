@@ -25,6 +25,7 @@ placeholder="email")
             )
             br
             .error(v-html="error")
+            .success(v-html="success")
             br
             v-btn(@click="login" dark).cyan Login
 
@@ -38,18 +39,23 @@ export default {
     return {
       email: '',
       password: '',
+      isDriver: false,
+      isPassenger: false,
       msg: 'This is the Login Component',
-      error: null
+      error: null,
+      success: null
     }
   },
   methods: {
     async login () {
       try {
+        this.error = this.success = null // reset the feedback
         const response = await AuthenticationService.login({
           email: this.email,
           password: this.password
         })
-        console.log(response.data)
+        console.log('success response', response.data)
+        this.success = response.data.success
       } catch (err) {
         this.error = err.response.data.error
       }
@@ -60,7 +66,4 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-  .error {
-    color: red
-  }
 </style>

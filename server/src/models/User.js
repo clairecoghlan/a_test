@@ -5,5 +5,14 @@ module.exports = (sequelize,Datatypes) =>
             unique: true,
             allowNull : false
         },
-        password : Datatypes.STRING
+        password: {
+            type: Datatypes.STRING,
+            allowNull : false
+        },
+        isDriver: {
+            type: Datatypes.BOOLEAN
+        },
+        isPassenger: {
+            type: Datatypes.BOOLEAN
+        }
     })

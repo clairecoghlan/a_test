@@ -1,8 +1,3 @@
-input(
-name="email"
-type="email"
-v-model="email"
-placeholder="email")
 <template lang="pug">
     v-layout(column)
       v-flex(xs6 offset-xs3)
@@ -24,7 +19,17 @@ placeholder="email")
               label="Password"
             )
             br
+            v-container(fluid)
+              v-layout(row wrap dark).dark--text
+                v-switch(
+                  v-model="isDriver"
+                  label="Driver Profile")
+                v-switch(
+                  v-model="isPassenger"
+                  label="Passenger Profile")
+            br
             .error(v-html="error")
+            .success(v-html="success")
             br
             v-btn(@click="register" dark).cyan Register
 
@@ -38,18 +43,22 @@ export default {
     return {
       email: '',
       password: '',
-      msg: 'This is the Register Component',
-      error: null
+      isDriver: false,
+      isPassenger: false,
+      error: null,
+      success: null
     }
   },
   methods: {
     async register () {
       try {
+        this.error = this.success = null // reset the feedback
         const response = await AuthenticationService.register({
           email: this.email,
           password: this.password
         })
-        console.log(response.data)
+        console.log('success response', response.data)
+        this.success = response.data.success
       } catch (err) {
         this.error = err.response.data.error
       }
@@ -57,10 +66,6 @@ export default {
   }
 }
 </script>
-
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-  .error {
-    color: red
-  }
 </style>
