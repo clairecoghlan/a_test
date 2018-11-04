@@ -26,7 +26,7 @@ const {sequelize} = require('../models')
 /**
  * open the database, create the models etc, and then, if no errors, start the server
  */
-sequelize.sync({force:true})  //  clear db
+sequelize.sync()  //  clear db {force:true}
     .then(() =>{
         /**
          * Listen on provided port, on all network interfaces.
