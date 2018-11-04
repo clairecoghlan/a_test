@@ -11,6 +11,34 @@ module.exports = {
                 original: err
             })
         }
-
+    },
+    async login (req,res){ // this replies to a register api request
+        try {
+            const {email,password} = req.body
+            const user = await User.findOne({
+                where: {
+                    email: email
+                }
+            })  //
+            if (!user) {
+                return res.status(403).send({
+                    error: 'Invalid login details - bad email'
+                })
+            }
+            if(password !== user.password) {
+                return res.status(403).send({
+                    error: 'Invalid login details - bad password'
+                })
+            }
+            return res.send({
+                message: 'Succesful login',
+                user: user.toJSON()
+            })     // send the new user object to front end
+        } catch(err) {
+            res.status(500).send({      // system error probably
+                error: 'An error has occurred while logging in' ,
+                original: err
+            })
+        }
     }
 }

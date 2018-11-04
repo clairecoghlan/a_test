@@ -11,8 +11,12 @@ router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' , message : 'Hello World I think' });
 });
 
-router.post('/register/' ,
+router.post('/register' ,
     AuthenticationControllerPolicy.register, // validate in middleware
     AuthenticationController.register)   // pass request to the controller
+
+router.post('/login' ,
+    AuthenticationControllerPolicy.login, // validate in middleware
+    AuthenticationController.login)   // pass request to the cont
 
 module.exports = router;

@@ -5,5 +5,9 @@ export default {
   register (credentials) {
     console.log('registering credentials via Api()')
     return Api().post('register', credentials)
+  },
+  login (credentials) {
+    console.log('login credentials via Api()')
+    return Api().post('login', credentials)
   }
 }

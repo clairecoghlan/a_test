@@ -1,5 +1,8 @@
 const Joi = require('joi')
 module.exports = {
+    login(req, res, next) {
+        next()
+    },
     register (req, res, next) {
         const schema = {
             email: Joi.string().email(),

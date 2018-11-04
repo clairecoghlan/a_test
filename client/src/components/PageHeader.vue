@@ -8,6 +8,7 @@
       v-toolbar-items
         // router-link(to="register")
         //  v-btn(flat dark) Sign Up
+        v-btn(flat dark @click="routeTo ('login')") Login
         v-btn(flat dark @click="routeTo ('register')") Sign Up
 
 </template>
