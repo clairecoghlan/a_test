@@ -18,6 +18,8 @@
         v-model="password"
       placeholder="password")
     br
+    .error(v-html="error")
+    br
     button(@click="register") Register
 </template>
 
@@ -29,16 +31,21 @@ export default {
     return {
       email: '',
       password: '',
-      msg: 'This is the Register Component'
+      msg: 'This is the Register Component',
+      error: null
     }
   },
   methods: {
     async register () {
-      const response = await AuthenticationService.register({
-        email: this.email,
-        password: this.password
-      })
-      console.log(response.data)
+      try {
+        const response = await AuthenticationService.register({
+          email: this.email,
+          password: this.password
+        })
+        console.log(response.data)
+      } catch (err) {
+        this.error = err.response.data.error
+      }
     }
   }
 }
@@ -46,5 +53,7 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-
+  .error {
+    color: red
+  }
 </style>
