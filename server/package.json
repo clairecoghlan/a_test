@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "start http://localhost:3000 && nodemon -e js,pug,html ./src/bin/www"
+    "start": "start http://localhost:3000 & nodemon -e js,pug,html ./src/bin/www"
   },
   "dependencies": {
     "body-parser": "^1.18.3",

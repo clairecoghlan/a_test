@@ -1,26 +1,33 @@
+input(
+name="email"
+type="email"
+v-model="email"
+placeholder="email")
 <template lang="pug">
-  .container
-    h2 Register
-    p= {msg}
-    label
-      span Email
-      input(
-        name="email"
-        type="email"
-        v-model="email"
-      placeholder="email")
-    br
-    label
-      span Password
-      input(
-        name="password"
-        type="password"
-        v-model="password"
-      placeholder="password")
-    br
-    .error(v-html="error")
-    br
-    button(@click="register") Register
+    v-layout(column)
+      v-flex(xs6 offset-xs3)
+        .white.elevation-2
+          v-toolbar(flat dense dark).cyan
+            v-toolbar-title Register
+          .container.pl-4.pr-4.pt-2.pb-2
+            // name="email" - stop autocomplete
+            v-text-field(
+              type="email"
+              v-model="email"
+              label="Email"
+            )
+            br
+            // name="password" - stop autocomplete
+            v-text-field(
+              type="password"
+              v-model="password"
+              label="Password"
+            )
+            br
+            .error(v-html="error")
+            br
+            v-btn(@click="register" dark).cyan Register
+
 </template>
 
 <script>
