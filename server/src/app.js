@@ -4,6 +4,7 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const cors = require('cors')
 const parser = require('body-parser')
+const {sequelize} = require('./models')
 
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
@@ -23,9 +24,5 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
-
-app.post('/register/' , (req,res) => {
-    res.send({message : `Hello ${req.body.email}. Your user was registered` , body : req.body })
-})
 
 module.exports = app;
