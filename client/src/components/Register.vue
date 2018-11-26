@@ -1,5 +1,5 @@
 <template lang="pug">
-    v-layout(column)
+  v-layout(column)
       v-flex(xs6 offset-xs3)
         .white.elevation-2
           v-toolbar(flat dense dark).cyan

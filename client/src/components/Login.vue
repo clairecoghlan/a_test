@@ -1,33 +1,28 @@
-input(
-name="email"
-type="email"
-v-model="email"
-placeholder="email")
 <template lang="pug">
-    v-layout(column)
-      v-flex(xs6 offset-xs3)
-        .white.elevation-2
-          v-toolbar(flat dense dark).cyan
-            v-toolbar-title Login
-          .container.pl-4.pr-4.pt-2.pb-2
-            // name="email" - stop autocomplete
-            v-text-field(
-              type="email"
-              v-model="email"
-              label="Email"
-            )
-            br
-            // name="password" - stop autocomplete
-            v-text-field(
-              type="password"
-              v-model="password"
-              label="Password"
-            )
-            br
-            .error(v-html="error")
-            .success(v-html="success")
-            br
-            v-btn(@click="login" dark).cyan Login
+  v-layout(column)
+    v-flex(xs6 offset-xs3)
+      .white.elevation-2
+        v-toolbar(flat dense dark).cyan
+          v-toolbar-title Login
+        .container.pl-4.pr-4.pt-2.pb-2
+          // name="email" - stop autocomplete
+          v-text-field(
+            type="email"
+            v-model="email"
+            label="Email"
+          )
+          br
+          // name="password" - stop autocomplete
+          v-text-field(
+            type="password"
+            v-model="password"
+            label="Password"
+          )
+          br
+          .error(v-html="error")
+          .success(v-html="success")
+          br
+          v-btn(@click="login" dark).cyan Login
 
 </template>
 
@@ -54,6 +49,9 @@ export default {
           email: this.email,
           password: this.password
         })
+        this.$state.user = response.data.user
+        // console.log('logged In?', this.isLoggedIn()) // method is there but any call causes errors
+        console.log('this', this.$state)
         console.log('success response', response.data)
         this.success = response.data.success
       } catch (err) {
