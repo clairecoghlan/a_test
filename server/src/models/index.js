@@ -22,32 +22,40 @@ fs
 console.log(db)
 
 
-db.DriverProfile.belongsTo(db.User)
-db.PassProfile.belongsTo(db.User)
+db.User.hasOne(db.PassProfile)
+// db.PassProfile.belongsTo(db.User)
 
-db.PassPickupPoints.belongsTo(db.PassProfile)
-db.DriverWaypoints.belongsTo(db.DriverProfile)
-
-db.DriverSchedule.belongsTo(db.DriverProfile)
-db.DriverSchedule.belongsTo(db.DaysOfWeek)  // FK for days of week
-
-db.DriverTrips.belongsTo(db.DriverProfile)
-db.DriverTrips.belongsTo(db.DaysOfWeek)  // FK for days of week
-db.DriverTrips.belongsTo(db.Weeks)      // FK for week number
-db.DriverTrips.belongsTo(db.DriverTripStatus)   // a status
-
-db.PassSchedule.belongsTo(db.PassProfile)  // the pass profile
+db.PassProfile.hasMany(db.PassSchedule)
+// db.PassSchedule.belongsTo(db.PassProfile)  // the pass profile
 db.PassSchedule.belongsTo(db.DaysOfWeek)  // FK for days of week
 db.PassSchedule.belongsTo(db.DriverProfile)      // the remembered driver
 
-db.PassTrips.belongsTo(db.PassProfile)
+db.PassProfile.hasMany(db.PassTrips)
+// db.PassTrips.belongsTo(db.PassProfile)
 db.PassTrips.belongsTo(db.DaysOfWeek)  // FK for days of week
 db.PassTrips.belongsTo(db.Weeks)      // FK for week number
 db.PassTrips.belongsTo(db.PassTripStatus)      // a status
 db.PassTrips.belongsTo(db.DriverProfile)      // which driver
 db.PassTrips.belongsTo(db.DriverTrips)      // which driver leg
 
+db.PassProfile.hasMany(db.PassPickupPoints)
+// db.PassPickupPoints.belongsTo(db.PassProfile)
 
+db.User.hasOne(db.DriverProfile)
+// db.DriverProfile.belongsTo(db.User)
+
+db.DriverProfile.hasMany(db.DriverWaypoints)
+// db.DriverWaypoints.belongsTo(db.DriverProfile)
+
+db.DriverProfile.hasMany(db.DriverSchedule)
+// db.DriverSchedule.belongsTo(db.DriverProfile)
+db.DriverSchedule.belongsTo(db.DaysOfWeek)  // FK for days of week
+
+db.DriverProfile.hasMany(db.DriverTrips)
+// db.DriverTrips.belongsTo(db.DriverProfile)
+db.DriverTrips.belongsTo(db.DaysOfWeek)  // FK for days of week
+db.DriverTrips.belongsTo(db.Weeks)      // FK for week number
+db.DriverTrips.belongsTo(db.DriverTripStatus)   // a status
 
 db.sequelize=sequelize
 db.Sequelize=Sequelize

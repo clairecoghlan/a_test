@@ -8,6 +8,7 @@
       v-toolbar-items
         // router-link(to="register")
         //  v-btn(flat dark) Sign Up
+        v-btn(flat dark @click="daysOfWeek") WeekDays
         v-btn(flat dark @click="routeTo ('profile')") Profile
         v-btn(flat dark @click="routeTo ('login')") Login
         v-btn(flat dark @click="routeTo ('register')") Sign Up
@@ -15,11 +16,16 @@
 </template>
 
 <script>
+import UtilServices from '@/services/UtilServices'
 export default {
   name: 'PageHeader',
   methods: {
     routeTo (route) {
       this.$router.push(route)
+    },
+    daysOfWeek () {
+      console.log('creating days of week')
+      UtilServices.setDaysOfWeek()
     }
   }
 

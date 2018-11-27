@@ -16,17 +16,18 @@
     datalist#locations(v-for="location in allLocations")
       option {{location}}
 
+    pass-schedule(v-bind:schedule="user.PassProfile.PassSchedules")
+
     br
     .error(v-html="error")
     .success(v-html="success")
-    br
-    v-btn(@click="" dark).cyan Save
 
 </template>
 
 <script>
 import Vue from 'vue'
 import VuetifyGoogleAutocomplete from 'vuetify-google-autocomplete'
+import PassSchedule from './PassSchedule'
 
 Vue.use(VuetifyGoogleAutocomplete, {
   apiKey: 'AIzaSyAx_hQgeWDJILn7Hy6FJ0rNrjtXfbQ-O0k'
@@ -34,10 +35,13 @@ Vue.use(VuetifyGoogleAutocomplete, {
 })
 
 export default {
-  name: 'ProfilePersonal',
+  name: 'ProfilePassenger',
+  components: {
+    PassSchedule
+  },
   data () {
     return {
-      user: {},
+      // user: {},
       allLocations: ['Aghada', 'Midleton', 'Tivoli', 'Lower Rd', 'Town Centre'],
       locations: '',
       passProfile: {
@@ -48,6 +52,10 @@ export default {
       error: ''
     }
   },
+  props: [
+    'user',
+    'schedule'
+  ],
   methods: {
     /**
      * When the location found
@@ -58,6 +66,9 @@ export default {
     getAddressData: function (addressData, placeResultData, id) {
       console.log(addressData, placeResultData, id)
       this.address = addressData
+    },
+    save () {
+
     }
   }
 }

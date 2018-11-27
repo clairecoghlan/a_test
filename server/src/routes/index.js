@@ -6,6 +6,8 @@ const AuthenticationController = require('../controllers/AuthenticationControlle
 // validation for controller as middleware
 const AuthenticationControllerPolicy = require('../policies/AuthenticationControllerPolicy')
 
+const ProfileController = require('../controllers/ProfileController')
+const UtilController = require('../controllers/UtilController')
 // /* GET home page. */
 // router.get('/', function(req, res, next) {
 //   res.render('index', { title: 'Express' , message : 'Hello World I think' });
@@ -18,5 +20,18 @@ router.post('/register' ,
 router.post('/login' ,
     AuthenticationControllerPolicy.login, // validate in middleware
     AuthenticationController.login)   // pass request to the cont
+
+router.get('/profile/:userId' ,
+    ProfileController.getProfile)   // pass request to the controller
+
+router.post('/profile/:userId' ,
+    ProfileController.saveProfile)   // pass request to the controller
+
+router.get('/pass_schedule/:profileId' ,
+    ProfileController.getPassSchedule)   // pass request to the controller
+
+router.get('/daysOfWeek' ,
+    UtilController.setDaysOfWeek)   // pass request to the controller
+
 
 module.exports = router;

@@ -52,13 +52,14 @@ export default {
   name: 'ProfilePersonal',
   data () {
     return {
-      user: {},
-      passProfile: {},
-      driverProfile: {},
+      // user: {},
       success: '',
       error: ''
     }
   },
+  props: [
+    'user'
+  ],
   methods: {
     /**
      * When the location found

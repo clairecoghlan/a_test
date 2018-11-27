@@ -1,9 +1,14 @@
 module.exports = {
   state: {
-    user: null
+    user: {
+      id: 1,
+      email: 'autologin@hotmail.com'
+    }
   },
-  isLoggedIn () {
-    // this causing errors
-    return this // .state.user // .state.user == null
+  methods: {
+    isLoggedIn () {
+      // this causing errors
+      return this.state.user !== null
+    }
   }
 }

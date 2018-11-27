@@ -6,4 +6,5 @@ module.exports = (sequelize,Datatypes) =>
         dep: Datatypes.TIME, // how long in mins it takes to get there
         arr: Datatypes.TIME,
         capacity: Datatypes.INTEGER,    // reduce to 0
+
     })
