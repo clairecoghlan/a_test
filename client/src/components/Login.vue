@@ -34,14 +34,15 @@ export default {
     return {
       email: '',
       password: '',
-      isDriver: false,
-      isPassenger: false,
       msg: 'This is the Login Component',
       error: null,
       success: null
     }
   },
   methods: {
+    routeTo (route) {
+      this.$router.push(route)
+    },
     async login () {
       try {
         this.error = this.success = null // reset the feedback
@@ -49,11 +50,14 @@ export default {
           email: this.email,
           password: this.password
         })
-        this.$state.user = response.data.user
-        // console.log('logged In?', this.isLoggedIn()) // method is there but any call causes errors
-        console.log('this', this.$state)
+        console.log('State', this.$state.state)
+        this.$state.state.user = response.data.user
+        this.$state.state.isLoggedIn = true
+
+        console.log('this.$state', this.$state)
         console.log('success response', response.data)
         this.success = response.data.success
+        this.routeTo('profile')
       } catch (err) {
         this.error = err.response.data.error
       }

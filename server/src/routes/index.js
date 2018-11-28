@@ -24,6 +24,10 @@ router.post('/login' ,
 router.get('/profile/:userId' ,
     ProfileController.getProfile)   // pass request to the controller
 
+// idea is to create a user profile when the user selects Driver at front end - just hit save
+// router.get('/profile/driver/:userId' ,
+//     ProfileController.getDriverProfile)   // pass request to the controller
+
 router.post('/profile/:userId' ,
     ProfileController.saveProfile)   // pass request to the controller
 

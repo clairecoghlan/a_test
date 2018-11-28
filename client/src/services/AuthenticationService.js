@@ -4,10 +4,14 @@ import Api from '@/services/Api'
 export default {
   register (credentials) {
     console.log('registering credentials via Api()')
-    return Api().post('register', credentials)
+    const res = Api().post('register', credentials)
+    console.log('Register results', res)
+    return res
   },
   login (credentials) {
     console.log('login credentials via Api()')
-    return Api().post('login', credentials)
+    const res = Api().post('login', credentials)
+    console.log('Login results', res)
+    return res
   }
 }

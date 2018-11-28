@@ -1,8 +1,15 @@
 const {User,PassProfile,PassSchedule,DriverProfile,DriverSchedule,DaysOfWeek} = require('../models')
 const deepUpdate = require("sequelize-deep-update");
 
-function updatePassSchedule (userJson){ // this replies to a register api request
+function updatePassSchedule (res,userJson){ // this replies to a register api request
     try {
+        if(!userJson.DriverProfile || !userJson.DriverProfile.DriverSchedules) {
+            console.log("No passenger profile/schedule to save for user ${userJson.email}")
+            return res.status(500).send({
+                error: `No passenger profile/schedule to save for user ${userJson.email}`
+            })
+            return
+        }
         // save the schedule
         userJson.PassProfile.PassSchedules.forEach((delta) =>{
             let schedule = PassSchedule.findByPk(delta.id)
@@ -18,24 +25,32 @@ function updatePassSchedule (userJson){ // this replies to a register api reques
     }
 }
 
-function updateDriverSchedule (userJson){ // this replies to a register api request
+function updateDriverSchedule (res,userJson){ // this replies to a register api request
     try {
         // save the schedule
+        if(!userJson.DriverProfile || !userJson.DriverProfile.DriverSchedules) {
+            console.log("No driver profile/schedule to save for user ${userJson.email}")
+            return res.status(500).send({
+                error: `No driver profile/schedule to save for user ${userJson.email}`
+            })
+            return
+        }
         userJson.DriverProfile.DriverSchedules.forEach((delta) =>{
             let schedule = DriverSchedule.findByPk(delta.id)
                 .then((schedule) => schedule.update(delta))
                 .then((schedule) => schedule.save())
         })
     } catch (err) {
-        console.log(`An error occurred saving Driver Schedule for user ${userJson.id} ${err}`)
+        console.log(`An error occurred saving Driver Schedule for user ${userJson.email} ${err}`)
         return res.status(500).send({
-            error: `An error occurred saving Driver Schedule for user ${userJson.id}`,
+            error: `An error occurred saving Driver Schedule for user ${userJson.email}`,
             original: err
         })
     }
 }
 
 function checkPassProfile(user) {
+    console.log('Checking Driver Profile')
     try {
         if (!user.PassProfile) {
             console.log('Creating Passenger Profile for ${user.email}')
@@ -76,6 +91,7 @@ function checkPassProfile(user) {
 }
 
 function checkDriverProfile(user) {
+    console.log('Checking Driver Profile', user)
     try {
         if (!user.DriverProfile) {
             console.log('Creating Driver Profile for ${user.email}')
@@ -127,10 +143,14 @@ module.exports = {
                 .then((user) => user.update(userJson) )
                 .then((user) => user.save())
 
-            if(userJson.isPassenger)
-                updatePassSchedule(userJson)
-            else
-                updateDriverSchedule(userJson)
+            if(userJson.isPassenger) {
+                console.log('Loading passenger profile')
+                updatePassSchedule(res,userJson)
+            } else {
+                console.log('Loading driver profile')
+                updateDriverSchedule(res,userJson)
+            }
+
 
             return res.send({
                 user: user.toJSON(), // send the new user object to front end
@@ -150,6 +170,10 @@ module.exports = {
         try {
             console.log('userId', userId, 'count',count++)
             // const user = await User.findById(userId)
+            // let user = await User.findByPk(userId)
+            // if(user && user.isPassenger) {
+            //     const models = 
+            // }
             const user = await User.findOne({
                 where: {
                     id: userId
@@ -174,10 +198,10 @@ module.exports = {
                 ]
             })
             console.log('Found user', user)
-            // if(user.isPassenger)
-            //     checkPassProfile()
-            // else
-            //     checkDriverProfile()
+            if(user.isPassenger)
+                checkPassProfile(user)
+            else
+                checkDriverProfile(user)
 
             // let schedule = PassSchedule.create({
             //     PassProfileId: user.PassProfile.id,

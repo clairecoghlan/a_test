@@ -25,14 +25,14 @@
 </template>
 
 <script>
-import Vue from 'vue'
-import VuetifyGoogleAutocomplete from 'vuetify-google-autocomplete'
+// import Vue from 'vue'
+// import VuetifyGoogleAutocomplete from 'vuetify-google-autocomplete'
 import PassSchedule from './PassSchedule'
 
-Vue.use(VuetifyGoogleAutocomplete, {
-  apiKey: 'AIzaSyAx_hQgeWDJILn7Hy6FJ0rNrjtXfbQ-O0k'
-  // Can also be an object. E.g, for Google Maps Premium API, pass `{ client: <YOUR-CLIENT-ID> }`
-})
+// Vue.use(VuetifyGoogleAutocomplete, {
+//   apiKey: 'AIzaSyAx_hQgeWDJILn7Hy6FJ0rNrjtXfbQ-O0k'
+//   // Can also be an object. E.g, for Google Maps Premium API, pass `{ client: <YOUR-CLIENT-ID> }`
+// })
 
 export default {
   name: 'ProfilePassenger',
@@ -66,9 +66,6 @@ export default {
     getAddressData: function (addressData, placeResultData, id) {
       console.log(addressData, placeResultData, id)
       this.address = addressData
-    },
-    save () {
-
     }
   }
 }

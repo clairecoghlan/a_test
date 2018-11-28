@@ -9,10 +9,16 @@ module.exports = (sequelize,Datatypes) =>
             type: Datatypes.STRING,
             allowNull : false
         },
-        isDriver: {
-            type: Datatypes.BOOLEAN
+        isAdmin: {
+            type: Datatypes.BOOLEAN,
+            default: false
         },
+        // isDriver: {      // simply the opposite of isPassenger
+        //     type: Datatypes.BOOLEAN,
+        //     default: false
+        // },
         isPassenger: {
-            type: Datatypes.BOOLEAN
+            type: Datatypes.BOOLEAN,
+            default: true
         }
     })

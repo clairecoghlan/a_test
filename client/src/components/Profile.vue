@@ -7,20 +7,20 @@
         .container.pl-4.pr-4.pt-2.pb-2
           v-tabs
             v-tab(ripple) Personal Details
-            v-tab(ripple) Passenger Details
-            v-tab(ripple) Driver Details
+            v-tab(ripple ) Passenger Details
+            v-tab(ripple ) Driver Details
 
             v-tab-item
               v-card
                 v-card-text
                   profile-personal(v-bind:user="user")
 
-            v-tab-item
+            v-tab-item()
               v-card
                 v-card-text
                   profile-passenger(v-bind:user="user",schedule="passSchedule")
 
-            v-tab-item
+            v-tab-item()
               v-card
                 v-card-text
                   profile-driver(v-bind:user="user",schedule="driverSchedule")
@@ -31,6 +31,7 @@
         br
       br
       v-btn(@click="save" dark).cyan Save
+      v-btn(@click="getProfile" dark).cyan Reload
 
 </template>
 
@@ -69,16 +70,34 @@ export default {
   },
   mounted () {
     console.log('Profile View mounted, getting passenger profile')
-    this.getPassengerProfile() // .then(() => this.getPassSchedule())
+    this.getProfile() // .then(() => this.getPassSchedule())
 
     console.log('User', this.user)
   },
   methods: {
+    /**
+     * When the location found
+     * @param {Object} addressData Data of the found location
+     * @param {Object} placeResultData PlaceResult object
+     * @param {String} id Input container ID
+     */
+    getAddressData: function (addressData, placeResultData, id) {
+      console.log(addressData, placeResultData, id)
+      this.address = addressData
+    },
+    async getProfile () {
+      const user = this.$state.state.user
+      if (user.isPassenger) {
+        await this.getPassengerProfile()
+      } else {
+        await this.getDriverProfile()
+      }
+    },
     async getPassengerProfile () {
       try {
-        console.log('Getting profile')
-        this.error = this.success = null // reset the feedback
         const user = this.$state.state.user
+        console.log('Getting profile for user ', user)
+        this.error = this.success = null // reset the feedback
         console.log('pre profile this.$state.state', this.$state.state)
         const res = await ProfileService.getProfile(user)
         this.user = res.data.user
