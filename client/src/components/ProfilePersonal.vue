@@ -63,7 +63,7 @@ export default {
     }
   },
   mounted () {
-    dataIsDriver = !this.user.isPassenger
+    this.dataIsDriver = !this.user.isPassenger
   },
   props: [
     'user'

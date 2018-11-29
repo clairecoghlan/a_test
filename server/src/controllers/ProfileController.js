@@ -198,9 +198,9 @@ module.exports = {
                 ]
             })
             console.log('Found user', user)
-            if(user.isPassenger)
+            // if(user.isPassenger)
                 checkPassProfile(user)
-            else
+            // else
                 checkDriverProfile(user)
 
             // let schedule = PassSchedule.create({
