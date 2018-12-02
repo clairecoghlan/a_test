@@ -289,7 +289,6 @@ module.exports = {
                 ]
             })
             console.log('Found user', user)
-
             if (user.isPassenger) {
                 checkPassProfile(user)
             } else {
