@@ -7,24 +7,36 @@
         .container.pl-4.pr-4.pt-2.pb-2
           v-tabs
             v-tab(ripple) Personal Details
-            v-tab(ripple ) Passenger Details
-            v-tab(ripple ) Driver Details
+            v-tab(v-if="isPassenger()" ripple )  Schedule
+            v-tab(v-if="isPassenger()" ripple ) Pickup Locations
+            v-tab(v-if="isDriver()" ripple ) Schedule
+            v-tab(v-if="isDriver()" ripple ) Waypoints
 
             v-tab-item
               v-card
                 v-card-text
                   profile-personal(v-bind:user="user")
 
-            v-tab-item()
+            v-tab-item(v-if="isPassenger()")
               v-card
                 v-card-text
                   profile-passenger(v-bind:user="user",schedule="passSchedule")
 
-            v-tab-item()
+            v-tab-item(v-if="isPassenger()")
+              v-card
+                v-card-text
+                  pass-pickups(v-bind:user="user")
+
+            v-tab-item(v-if="isDriver()")
               v-card
                 v-card-text
                   profile-driver(v-bind:user="user",schedule="driverSchedule")
 
+            v-tab-item(v-if="isDriver()")
+              v-card
+                v-card-text
+                  driver-waypoints(v-bind:user="user")
+                  //- ,waypoints="waypoints"
         br
         .error(v-html="error")
         .success(v-html="success")
@@ -39,6 +51,8 @@
 import ProfilePersonal from './ProfilePersonal'
 import ProfilePassenger from './ProfilePassenger'
 import ProfileDriver from './ProfileDriver'
+import DriverWaypoints from './DriverWaypoints'
+import PassPickups from './PassPickups'
 import ProfileService from '@/services/ProfileService'
 
 export default {
@@ -46,32 +60,28 @@ export default {
   components: {
     ProfilePersonal,
     ProfilePassenger,
-    ProfileDriver
+    PassPickups,
+    ProfileDriver,
+    DriverWaypoints
   },
   data () {
     return {
-      user: {
-        email: '',
-        password: '',
-        isDriver: false,
-        isPassenger: true,
-        PassProfile: {
-          PassSchedules: []
-        },
-        DriverProfile: {
-          DriverSchedules: []
-        },
-        passSchedule: [],
-        driverSchedule: []
-      },
+      user: {},
+      waypoints: [],
       success: '',
       error: ''
     }
   },
+  props: [
+    // 'user'
+  ],
   mounted () {
+    this.user = this.$root.currUser
+    if (!this.user) {
+      this.routeTo('/')
+    }
     console.log('Profile View mounted, getting passenger profile')
-    this.getProfile() // .then(() => this.getPassSchedule())
-
+    this.getProfile(this.user) // .then(() => this.getPassSchedule())
     console.log('User', this.user)
   },
   methods: {
@@ -86,54 +96,53 @@ export default {
       this.address = addressData
     },
     async getProfile () {
-      const user = this.$state.state.user
+      const user = this.user
       if (user.isPassenger) {
-        await this.getPassengerProfile()
+        await this.getPassengerProfile(user)
       } else {
-        await this.getDriverProfile()
+        await this.getDriverProfile(user)
       }
     },
-    async getPassengerProfile () {
+    async getPassengerProfile (user) {
       try {
-        const user = this.$state.state.user
         console.log('Getting profile for user ', user)
         this.error = this.success = null // reset the feedback
-        console.log('pre profile this.$state.state', this.$state.state)
+        // console.log('pre profile this.$state.state', this.$state.state)
         const res = await ProfileService.getProfile(user)
-        this.user = res.data.user
-        console.log('user', this.user,
-          'user profile', this.user.PassProfile,
-          'user.profile.id', this.user.PassProfile.id,
-          'user.profile.schedules', this.user.PassProfile.PassSchedules)
+        this.$root.currUser = this.user = res.data.user
+        // console.log('user', this.user,
+        //   'user profile', this.user.PassProfile,
+        //   'user.profile.id', this.user.PassProfile.id,
+        //   'user.profile.schedules', this.user.PassProfile.PassSchedules)
 
         this.success = res.data.success
       } catch (err) {
         this.error = err.response.data.error
       }
     },
-    async getDriverProfile () {
+    async getDriverProfile (user) {
       try {
         console.log('Getting driver profile')
         this.error = this.success = null // reset the feedback
-        const user = this.$state.state.user
-        console.log('pre profile this.$state.state', this.$state.state)
         const res = await ProfileService.getProfile(user)
-        this.user = res.data.user
-        console.log('user', this.user,
-          'user profile', this.user.DriverProfile,
-          'user.profile.id', this.user.DriverProfile.id,
-          'user.profile.schedules', this.user.DriverProfile.DriverSchedules)
+        this.$root.currUser = this.user = res.data.user
+        this.waypoints = this.user.DriverProfile.DriverWaypoints
+        console.log('profile:this.waypoints', this.waypoints)
+        // console.log('user', this.user,
+        //   'user profile', this.user.DriverProfile,
+        //   'user.profile.id', this.user.DriverProfile.id,
+        //   'user.profile.schedules', this.user.DriverProfile.DriverSchedules)
 
         this.success = res.data.success
       } catch (err) {
         this.error = err.response.data.error
       }
     },
-    async getPassSchedule () {
+    async getPassSchedule (user) {
       try {
         console.log('Getting Schedule')
         this.error = this.success = null // reset the feedback
-        const res = await ProfileService.getPassSchedule(this.user)
+        const res = await ProfileService.getPassSchedule(user)
         this.schedule = res.data.schedule
         console.log('Schedule', this.schedule)
         this.success = res.data.success

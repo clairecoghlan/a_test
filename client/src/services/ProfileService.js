@@ -13,5 +13,12 @@ export default {
   getPassSchedule (user) {
     console.log('get Pass Schedule via Api()', user.PassProfile.id)
     return Api().get(`pass_schedule/${user.PassProfile.id}`, user)
+  },
+  getLocation (location) {
+
+  },
+  getLocations () {
+    console.log('get Locations via Api()')
+    return Api().get(`locations/`)
   }
 }

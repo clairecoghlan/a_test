@@ -1,21 +1,16 @@
 <template lang="pug">
-    v-toolbar(:key="someStrangeVar" fixed dark).cyan
+    v-toolbar(fixed dark).cyan
       v-toolbar-title
         span(@click="routeTo ('/')").clickable Car Share
       v-toolbar-items
-        <!--v-btn(flat dark) Browse-->
+
       v-spacer
       v-toolbar-items
-        // router-link(to="register")
-        //  v-btn(flat dark) Sign Up
-        v-btn(flat dark @click="daysOfWeek") WeekDays
-        v-btn(flat dark @click="routeTo ('profile')") Profile
-        v-btn(flat dark @click="logout") Logout
-        v-btn(flat dark @click="routeTo ('login')") Login
-        v-btn(flat dark @click="routeTo ('register')") Sign Up
-        <!--span(v-if="isLoggedIn") {{user.email}}-->
-        <!--span {{isLoggedIn}}-->
-        <!--span {{this.$someStrangeName}}-->
+        v-btn(v-if="isAdmin()"  flat dark @click="daysOfWeek") WeekDays
+        v-btn(v-if="isLoggedIn()" flat dark @click="routeTo ('profile')") Profile
+        v-btn(v-if="isLoggedIn()" flat dark @click="logout") Logout
+        v-btn(v-if="isLoggedOut()" flat dark @click="routeTo ('login')") Login
+        v-btn(v-if="isLoggedOut()" flat dark @click="routeTo ('register')") Sign Up
 
 </template>
 
@@ -24,12 +19,8 @@ import UtilServices from '@/services/UtilServices'
 export default {
   name: 'PageHeader',
   methods: {
-    routeTo (route) {
-      this.$router.push(route)
-    },
     logout () {
-      this.user = null
-      this.isLoggedIn = false
+      this.$root.currUser = null
       this.routeTo('home')
     },
     daysOfWeek () {

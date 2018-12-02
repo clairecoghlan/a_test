@@ -20,5 +20,6 @@ module.exports = (sequelize,Datatypes) =>
         isPassenger: {
             type: Datatypes.BOOLEAN,
             default: true
-        }
+        },
+        home: String
     })

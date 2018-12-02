@@ -5,7 +5,9 @@
   "author": "Claire Nuala Coghlan <115326446@umail.ucc.ie>",
   "private": true,
   "scripts": {
-    "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js & start http://localhost:8080/",
+    "open": "start http://localhost:8080/",
+    "wp-server": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
+    "dev": "npm run open & npm run wp-server",
     "start": "npm run dev",
     "unit": "cross-env BABEL_ENV=test karma start test/unit/karma.conf.js --single-run",
     "test": "npm run unit",

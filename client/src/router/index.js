@@ -7,6 +7,10 @@ import Profile from '@/components/Profile'
 
 Vue.use(Router)
 
+// Router.beforeEach( (to, from, next) => {
+//   if(!Vue.user)
+// })
+
 export default new Router({
   routes: [
     {

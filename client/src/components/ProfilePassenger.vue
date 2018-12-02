@@ -1,20 +1,21 @@
 <template lang="pug">
   .container.pl-4.pr-4.pt-2.pb-2
-    vuetify-google-autocomplete(
-      id="pass-location-map"
-      label="Location"
-      append-icon="search"
-      placeholder="Start typing"
-      v-on:placechanged="getAddressData"
-    )
-    br
-    v-text-field(
-      list="locations"
-      v-model="locations"
-      label="Pickup Locations"
-    )
-    datalist#locations(v-for="location in allLocations")
-      option {{location}}
+    //- vuetify-google-autocomplete(
+    //-   id="pass-location-map"
+    //-   label="Home"
+    //-   append-icon="search"
+    //-   placeholder="Start typing"
+    //-   v-on:placechanged="getAddressData"
+    //- )
+    //- br
+    //- v-text-field(
+    //-   label="Home"
+    //-   list="locations"
+    //-   v-model="user.hom"
+    //-   label="Pickup Locations"
+    //- )
+    //- datalist#locations
+    //-   option(v-for="location in allLocations") {{location}}
 
     pass-schedule(v-bind:schedule="user.PassProfile.PassSchedules")
 

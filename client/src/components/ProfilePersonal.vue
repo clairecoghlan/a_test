@@ -17,24 +17,37 @@
       v-layout(row wrap dark).dark--text
 
         <!--v-on:change="toggleIsPassenger"-->
+        <!--v-on:change="toggleIsDriver" -->
         v-switch(
-        v-on:change="toggleIsDriver"
-          v-model="dataIsDriver"
+          v-model="_isDriver"
           label="Driver Profile"
         )
         <!--span.v-input__control Driver Profile-->
+        <!-- v-on:change="toggleIsPassenger" -->
         v-switch(
-          v-on:change="toggleIsDriverOnly"
           v-model="user.isPassenger"
           label="Passenger Profile"
         )
-        vuetify-google-autocomplete(
-          id="map"
-          label="Location"
+        //- br
+        //- vuetify-google-autocomplete(
+        //-   id="map"
+        //-   label="Home"
+        //-   append-icon="search"
+        //-   placeholder="Start typing"
+        //-   v-on:placechanged="getAddressData"
+        //- )
+        br
+        v-text-field(
+          list="locations"
+          label="Home"
           append-icon="search"
           placeholder="Start typing"
-          v-on:placechanged="getAddressData"
+          v-on:keyup="geonames(user.home)"
+          v-model="user.home"
         )
+        datalist#locations
+          option(v-for="location in locations") {{location.toponymName}}
+
       br
       .error(v-html="error")
       .success(v-html="success")
@@ -44,55 +57,36 @@
 </template>
 
 <script>
-import Vue from 'vue'
-import VuetifyGoogleAutocomplete from 'vuetify-google-autocomplete'
-
-Vue.use(VuetifyGoogleAutocomplete, {
-  apiKey: 'AIzaSyAx_hQgeWDJILn7Hy6FJ0rNrjtXfbQ-O0k'
-  // Can also be an object. E.g, for Google Maps Premium API, pass `{ client: <YOUR-CLIENT-ID> }`
-})
 
 export default {
   name: 'ProfilePersonal',
   data () {
     return {
       // user: {},
-      dataIsDriver: !this.user.isPassenger,
+      dataIsDriver: this.isDriver(),
+      home: '',
+      locations: [],
       success: '',
       error: ''
     }
   },
   mounted () {
-    dataIsDriver = !this.user.isPassenger
+    this.dataIsDriver = this.isDriver()
   },
   props: [
     'user'
   ],
   computed: {
+    _isDriver: {
+      get () {
+        return !this.user.isPassenger
+      },
+      set (val) {
+        this.user.isPassenger = !this.user.isPassenger
+      }
+    }
   },
   methods: {
-    toggleIsDriverOnly () {
-      this.dataIsDriver = !this.dataIsDriver
-    },
-    toggleIsDriver () {
-      console.log(`driver: switching driver to ${!this.dataIsDriver}`)
-      this.dataIsDriver = this.user.isPassenger
-      this.toggleIsPassenger()
-    },
-    toggleIsPassenger () {
-      console.log(`pass: switching passenger to ${!this.user.isPassenger}`)
-      this.user.isPassenger = !this.user.isPassenger
-    },
-    /**
-     * When the location found
-     * @param {Object} addressData Data of the found location
-     * @param {Object} placeResultData PlaceResult object
-     * @param {String} id Input container ID
-     */
-    getAddressData: function (addressData, placeResultData, id) {
-      console.log(addressData, placeResultData, id)
-      this.address = addressData
-    }
 
   }
 }

@@ -40,9 +40,6 @@ export default {
     }
   },
   methods: {
-    routeTo (route) {
-      this.$router.push(route)
-    },
     async login () {
       try {
         this.error = this.success = null // reset the feedback
@@ -50,15 +47,12 @@ export default {
           email: this.email,
           password: this.password
         })
-        console.log('State', this.$state.state)
-        this.$state.state.user = response.data.user
-        this.$state.state.isLoggedIn = true
-
-        console.log('this.$state', this.$state)
         console.log('success response', response.data)
+        this.$root.currUser = this.user = response.data.user
         this.success = response.data.success
         this.routeTo('profile')
       } catch (err) {
+        console.log('error response', err.response.data)
         this.error = err.response.data.error
       }
     }

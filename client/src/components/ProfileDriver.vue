@@ -2,7 +2,7 @@
   .container.pl-4.pr-4.pt-2.pb-2
     vuetify-google-autocomplete(
       id="pass-location-map"
-      label="Location"
+      label="Home"
       append-icon="search"
       placeholder="Start typing"
       v-on:placechanged="getAddressData"
@@ -18,14 +18,6 @@
         v-model="user.DriverProfile.capacity"
         label="Capacity"
       )
-    br
-    v-text-field(
-      list="locations"
-      v-model="locations"
-      label="Waypoint Locations"
-    )
-    datalist#locations(v-for="location in allLocations")
-      option {{location}}
 
     driver-schedule(v-if="user.DriverProfile" v-bind:schedule="user.DriverProfile.DriverSchedules")
 
@@ -48,24 +40,19 @@ export default {
   data () {
     return {
       // user: {},
-      allLocations: ['Aghada', 'Midleton', 'Tivoli', 'Lower Rd', 'Town Centre'],
-      locations: '',
       success: '',
       error: ''
     }
   },
-  props: {
-    user: {
-      // default: {
-      //   DriverProfile: {
-      //     location: '',
-      //     carReg: '',
-      //     capacity: 4
-      //   }
-      // }
+  mounted () {
+    if (!this.user) {
+      this.routeTo('/')
     }
-    // schedule: Array
   },
+  props: [
+    'user',
+    'schedule'
+  ],
   methods: {
     /**
      * When the location found

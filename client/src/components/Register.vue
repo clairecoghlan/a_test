@@ -19,14 +19,14 @@
               label="Password"
             )
             br
-            v-container(fluid)
-              v-layout(row wrap dark).dark--text
-                v-switch(
-                  v-model="isDriver"
-                  label="Driver Profile")
-                v-switch(
-                  v-model="isPassenger"
-                  label="Passenger Profile")
+            //- v-container(fluid)
+            //-   v-layout(row wrap dark).dark--text
+            //-     v-switch(
+            //-       v-model="_isDriver"
+            //-       label="Driver Profile")
+            //-     v-switch(
+            //-       v-model="IsPassenger"
+            //-       label="Passenger Profile")
             br
             .error(v-html="error")
             .success(v-html="success")
@@ -43,8 +43,7 @@ export default {
     return {
       email: '',
       password: '',
-      isDriver: false,
-      isPassenger: false,
+      IsPassenger: true,
       error: null,
       success: null
     }
@@ -57,10 +56,21 @@ export default {
           email: this.email,
           password: this.password
         })
+        // isPassenger: this.IsPassenger
         console.log('success response', response.data)
         this.success = response.data.success
       } catch (err) {
         this.error = err.response.data.error
+      }
+    }
+  },
+  computed: {
+    _isDriver: {
+      get () {
+        return !this.IsPassenger
+      },
+      set (val) {
+        this.IsPassenger = !this.IsPassenger
       }
     }
   }
