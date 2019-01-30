@@ -31,6 +31,9 @@ Vue.mixin({
     }
   },
   methods: {
+    user () {
+      return this.$root.currUser
+    },
     isLoggedIn () {
       // console.log('this.$root', this.$root)
       return this.$root && this.$root.currUser !== null

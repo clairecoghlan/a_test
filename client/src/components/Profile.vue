@@ -9,6 +9,7 @@
             v-tab(ripple) Personal Details
             v-tab(v-if="isPassenger()" ripple )  Schedule
             v-tab(v-if="isPassenger()" ripple ) Pickup Locations
+            v-tab(v-if="isPassenger()" ripple )  Drivers
             v-tab(v-if="isDriver()" ripple ) Schedule
             v-tab(v-if="isDriver()" ripple ) Waypoints
 
@@ -26,6 +27,11 @@
               v-card
                 v-card-text
                   pass-pickups(v-bind:user="user")
+
+            v-tab-item(v-if="isPassenger()")
+              v-card
+                v-card-text
+                  pass-drivers(v-bind:user="user")
 
             v-tab-item(v-if="isDriver()")
               v-card
@@ -53,6 +59,7 @@ import ProfilePassenger from './ProfilePassenger'
 import ProfileDriver from './ProfileDriver'
 import DriverWaypoints from './DriverWaypoints'
 import PassPickups from './PassPickups'
+import PassDrivers from './PassDrivers'
 import ProfileService from '@/services/ProfileService'
 
 export default {
@@ -61,6 +68,7 @@ export default {
     ProfilePersonal,
     ProfilePassenger,
     PassPickups,
+    PassDrivers,
     ProfileDriver,
     DriverWaypoints
   },

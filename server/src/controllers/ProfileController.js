@@ -120,7 +120,7 @@ function updateDriverWaypoints (res,userJson){ // this replies to a register api
 }
 
 function checkPassProfile(user) {
-    console.log('Checking Driver Profile')
+    console.log('Checking passenger Profile')
     try {
         if (!user.PassProfile) {
             console.log(`Creating Passenger Profile for ${user.email}`)
@@ -131,6 +131,7 @@ function checkPassProfile(user) {
             user.PassProfile = profile
         }
         let profile = user.PassProfile
+        if(!profile.PassSchedules) profile.PassSchedules=[];
         if (profile.PassSchedules && profile.PassSchedules.length == 0) {
             // now create the schedule
             console.log(`Creating Passenger Schedule (out & rtn) for ${user.email}`)
@@ -216,6 +217,66 @@ async function checkDriverProfile(user) {
     }
 }
 
+async function getProfileByUserId(userId,res) {
+    try {
+        console.log('Loading Passenger Profile','userId', userId, 'count',count++)
+        // const user = await User.findById(userId)
+        // let user = await User.findByPk(userId)
+        // reload user with extra data
+        const user = await User.findOne({
+            where: {
+                id: userId
+            },
+            include: [
+                {
+                    model: PassProfile,
+                    include: [
+                        {model: PassSchedule,
+                            include:[ DaysOfWeek ]
+                        },
+                        {model: PassPickupPoints
+                        }
+                    ]
+                },
+                {
+                    model: DriverProfile,
+                    include: [
+                        {model: DriverSchedule,
+                            include:[ DaysOfWeek ]
+                        },
+                        {
+                            model: DriverWaypoints
+                        }
+                    ]
+                }
+            ]
+        })
+        console.log('Found user', user)
+        if (user.isPassenger) {
+            checkPassProfile(user)
+        } else {
+            checkDriverProfile(user)
+        }
+        return user;
+        // let schedule = PassSchedule.create({
+        //     PassProfileId: user.PassProfile.id,
+        //     leg: 2,
+        //     dep: '17:00',
+        //     arr: '17:30'
+        // })
+        // console.log('Schedule',schedule)
+        // const passProfile = await user.getPassProfiles()
+        // console.log('Found Passenger Profile',passProfile)
+    } catch (err) {
+        console.log(`An error occurred getting Profile for user ${userId} ${err}`)
+        return res.status(500).send({
+            error: `An error occurred getting Profile for user ${userId}`,
+            original: err
+        })
+    }
+
+}
+
 let count=1
 module.exports = {
     async saveProfile(req, res) { // this replies to a register api request
@@ -254,61 +315,15 @@ module.exports = {
         }
     },
     async getProfile(req, res) { // this replies to a register api request
-        const userId = req.params.userId
         try {
-            console.log('userId', userId, 'count',count++)
-            // const user = await User.findById(userId)
-            // let user = await User.findByPk(userId)
-            // reload user with extra data
-            const user = await User.findOne({
-                where: {
-                    id: userId
-                },
-                include: [
-                    {
-                        model: PassProfile,
-                        include: [
-                            {model: PassSchedule,
-                                include:[ DaysOfWeek ]
-                            },
-                            {model: PassPickupPoints
-                            }
-                        ]
-                    },
-                    {
-                        model: DriverProfile,
-                        include: [
-                            {model: DriverSchedule,
-                                include:[ DaysOfWeek ]
-                            },
-                            {
-                                model: DriverWaypoints
-                            }
-                        ]
-                    }
-                ]
-            })
-            console.log('Found user', user)
-            if (user.isPassenger) {
-                checkPassProfile(user)
-            } else {
-                checkDriverProfile(user)
-            }
-
-            // let schedule = PassSchedule.create({
-            //     PassProfileId: user.PassProfile.id,
-            //     leg: 2,
-            //     dep: '17:00',
-            //     arr: '17:30'
-            // })
-            // console.log('Schedule',schedule)
-            // const passProfile = await user.getPassProfiles()
-            // console.log('Found Passenger Profile',passProfile)
+            const userId = req.params.userId;
+            const user = getProfileByUserId(userId,res);
             return res.send({
                 user: user.toJSON(), // send the new user object to front end
                 // passProfile: passprofile.toJSON(),
                 success: `Profile Found for ${user.email}!`
             })
+
         } catch (err) {
             console.log(`An error occurred getting Profile for user ${userId} ${err}`)
             return res.status(500).send({
@@ -316,6 +331,7 @@ module.exports = {
                 original: err
             })
         }
+
     },
     async getPassSchedule(req, res) { // this replies to a register api request
         const profileId = req.params.profileId
@@ -343,6 +359,46 @@ module.exports = {
             console.log(`An error occurred getting Passenger Schedule for profile ${profileId} ${err}`)
             return res.status(500).send({
                 error: `An error occurred getting Passenger Schedule for profile ${profileId}`,
+                original: err
+            })
+        }
+    },
+    async getPassDrivers(req, res) { // this replies to a register api request
+        const userId = req.params.userId
+        try {
+            console.log(`server: Getting pass drivers for ${userId}`)
+            getProfileByUserId(userId, res)
+            .then( function(pass) {
+                console.log('******passenger', pass)
+                let locations = [];
+                console.log('******pickup points', pass.PassProfile.PassPickupPoints)
+                for(var idx in pass.PassProfile.PassPickupPoints) {
+                    var loc = pass.PassProfile.PassPickupPoints[idx]  
+                    locations.push(loc.location);
+                }
+                console.log('****locations', locations)
+                // pass.PassProfile.PassPickupPoints.forEach(function(loc){
+                //     locations.push(loc);
+                // });
+
+                DriverWaypoints.findAll({
+                    where: {
+                        location: locations
+                    }
+                })
+                .then(function(driverWaypoints){
+                    console.log('Drivers???',driverWaypoints);
+                    return res.send({
+                        bollix: driverWaypoints, // send the new user object to front end
+                        // passProfile: passprofile.toJSON(),
+                        success: `Passenger Drivers Found for Passenger ${pass.email}`
+                    })
+                })
+            })
+        } catch (err) {
+            console.log(`An error occurred getting Passenger Schedule for user ${userId} ${err}`)
+            return res.status(500).send({
+                error: `An error occurred getting Passenger Schedule for user ${userId}`,
                 original: err
             })
         }

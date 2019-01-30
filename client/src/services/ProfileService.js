@@ -14,6 +14,10 @@ export default {
     console.log('get Pass Schedule via Api()', user.PassProfile.id)
     return Api().get(`pass_schedule/${user.PassProfile.id}`, user)
   },
+  getPassDrivers (user) {
+    console.log('get Pass Drivers via Api()', user.id)
+    return Api().get(`pass_drivers/${user.id}`, user)
+  },
   getLocation (location) {
 
   },

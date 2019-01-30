@@ -34,6 +34,9 @@ router.post('/profile/:userId' ,
 router.get('/pass_schedule/:profileId' ,
     ProfileController.getPassSchedule)   // pass request to the controller
 
+router.get('/pass_drivers/:userId' ,
+    ProfileController.getPassDrivers)   // pass request to the controller
+
 router.get('/daysOfWeek' ,
     UtilController.setDaysOfWeek)   // pass request to the controller
 

@@ -7,7 +7,7 @@ module.exports = {
         options: {
             dialect: process.env.DIALECT || 'sqlite',    // allow connect to other db
             host: process.env.HOST || 'localhost',    // server where database is located
-            storage: './careshare.sqlite',       // where store sqlite data
+            storage: '../../careshare.sqlite',       // where store sqlite data
 
         }
     }
