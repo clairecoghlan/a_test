@@ -5,14 +5,13 @@
     table(striped)
       thead
         tr
-          td ID
-          td(colspan="2") Driver
-          td(colspan="2") Pick up Location
+          td(colspan="1") Driver
+          td(colspan="1") Pick up Location
       tbody
 
         tr(v-for="driver in drivers")
-          td {{driver.id}}
-          td {{driver.email}}
+          td {{driver.driverEmail}}
+          td {{driver.location}}
 </template>
 
 <script>
@@ -36,7 +35,7 @@ export default {
         console.log('****** getPassDrivers?', this.user())
         this.error = this.success = null // reset the feedback
         const res = await ProfileService.getPassDrivers(this.user())
-        this.drivers = res.data.bollix
+        this.drivers = res.data.driverWaypoints
         // console.log('Schedule', this.schedule)
         // this.success = res.data.success
       } catch (err) {

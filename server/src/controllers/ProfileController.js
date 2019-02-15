@@ -15,9 +15,11 @@ function updatePassSchedule (res,userJson){ // this replies to a register api re
         }
         // save the schedule
         userJson.PassProfile.PassSchedules.forEach((delta) =>{
-            let schedule = PassSchedule.findByPk(delta.id)
-                .then((schedule) => schedule.update(delta))
-                .then((schedule) => schedule.save())
+            PassSchedule.findByPk(delta.id)
+            .then((schedule) => {
+                schedule.update(delta)
+                schedule.save()
+            })
         })
     } catch (err) {
         console.log(`An error occurred saving Passenger Schedule for user ${userJson.id} ${err}`)
@@ -120,7 +122,7 @@ function updateDriverWaypoints (res,userJson){ // this replies to a register api
 }
 
 function checkPassProfile(user) {
-    console.log('Checking passenger Profile')
+    console.log('checkPassProfile: Checking passenger Profile')
     try {
         if (!user.PassProfile) {
             console.log(`Creating Passenger Profile for ${user.email}`)
@@ -159,6 +161,8 @@ function checkPassProfile(user) {
     } catch(err)  {
         console.log(`Error creating Passenger Profile/Schedule for user ${user.id}`)
     }
+    console.log('checkPassProfile:  passenger Profile checked')
+
 }
 
 async function checkDriverSchedule(user) {
@@ -219,7 +223,7 @@ async function checkDriverProfile(user) {
 
 async function getProfileByUserId(userId,res) {
     try {
-        console.log('Loading Passenger Profile','userId', userId, 'count',count++)
+        console.log('getProfileByUserId: Loading Passenger Profile','userId', userId, 'count',count++)
         // const user = await User.findById(userId)
         // let user = await User.findByPk(userId)
         // reload user with extra data
@@ -251,12 +255,13 @@ async function getProfileByUserId(userId,res) {
                 }
             ]
         })
-        console.log('Found user', user)
+        console.log('getProfileByUserId: Found user', user.email)
         if (user.isPassenger) {
             checkPassProfile(user)
         } else {
             checkDriverProfile(user)
         }
+        console.log('getProfileByUserId: Profile checked', user.email)
         return user;
         // let schedule = PassSchedule.create({
         //     PassProfileId: user.PassProfile.id,
@@ -268,9 +273,9 @@ async function getProfileByUserId(userId,res) {
         // const passProfile = await user.getPassProfiles()
         // console.log('Found Passenger Profile',passProfile)
     } catch (err) {
-        console.log(`An error occurred getting Profile for user ${userId} ${err}`)
+        console.log(`getProfileByUserId: An error occurred getting Profile for user ${userId} ${err}`)
         return res.status(500).send({
-            error: `An error occurred getting Profile for user ${userId}`,
+            error: `getProfileByUserId: An error occurred getting Profile for user ${userId}`,
             original: err
         })
     }
@@ -315,22 +320,24 @@ module.exports = {
         }
     },
     async getProfile(req, res) { // this replies to a register api request
+        console.log('getProfile.enter')
+        const userId = req.params.userId;
         try {
-            const userId = req.params.userId;
-            const user = getProfileByUserId(userId,res);
+            const user = await getProfileByUserId(userId,res);
             return res.send({
                 user: user.toJSON(), // send the new user object to front end
                 // passProfile: passprofile.toJSON(),
-                success: `Profile Found for ${user.email}!`
+                success: `getProfile: Profile Found for ${user.email}!`
             })
 
         } catch (err) {
-            console.log(`An error occurred getting Profile for user ${userId} ${err}`)
+            console.log(`getProfile: An error occurred getting Profile for user ${userId} ${err}`)
             return res.status(500).send({
-                error: `An error occurred getting Profile for user ${userId}`,
+                error: `getProfile: An error occurred getting Profile for user ${userId}`,
                 original: err
             })
         }
+        console.log('getProfile.exit')
 
     },
     async getPassSchedule(req, res) { // this replies to a register api request
@@ -369,9 +376,9 @@ module.exports = {
             console.log(`server: Getting pass drivers for ${userId}`)
             getProfileByUserId(userId, res)
             .then( function(pass) {
-                console.log('******passenger', pass)
+                console.log('******passenger', pass.email)
                 let locations = [];
-                console.log('******pickup points', pass.PassProfile.PassPickupPoints)
+                //console.log('******pickup points', pass.PassProfile.PassPickupPoints)
                 for(var idx in pass.PassProfile.PassPickupPoints) {
                     var loc = pass.PassProfile.PassPickupPoints[idx]  
                     locations.push(loc.location);
@@ -387,12 +394,43 @@ module.exports = {
                     }
                 })
                 .then(function(driverWaypoints){
-                    console.log('Drivers???',driverWaypoints);
-                    return res.send({
-                        bollix: driverWaypoints, // send the new user object to front end
-                        // passProfile: passprofile.toJSON(),
-                        success: `Passenger Drivers Found for Passenger ${pass.email}`
+                    //console.log('Drivers???',driverWaypoints);
+                    let dwps = []
+                    driverWaypoints.forEach(function(dwp){ //Driver way point
+                        dwps.push({
+                            'driverWaypointId': dwp.id,
+                            'location': dwp.location,
+                            'driverProfileId': dwp.DriverProfileId,
+                            'driverUserId': null, //will find from profiles
+                            'driverEmail': null
+                        })
                     })
+                    console.log('waypoints', dwps)
+                    //Now get userIds from DriverprofileIds
+                    dwps.forEach(function(dwp){
+                        console.log('Find userID')
+                        DriverProfile.findByPk(dwp.driverProfileId)
+                        .then((dp)=>{ //return driver profile now called dp
+                            //Now record driver's userId
+                            console.log('UserId Found', dp.UserId)
+                            dwp.driverUserId = dp.UserId
+                            User.findByPk(dp.UserId)
+                            .then((user)=>{
+                                dwp.driverEmail = user.email
+                            })
+                             .then(()=>{
+                                console.log('userIds', dwps) 
+                                //send the result back to browser
+                                return res.send({
+                                    driverWaypoints: dwps, // send the new user object to front end
+                                    // passProfile: passprofile.toJSON(),
+                                    success: `Passenger Drivers Found for Passenger ${pass.email}`
+                                })
+                            })
+                        })
+                       
+                    })                     
+                    
                 })
             })
         } catch (err) {
