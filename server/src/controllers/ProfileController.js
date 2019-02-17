@@ -471,7 +471,7 @@ module.exports = {
                         ppps.push({
                             'passPickupPointsId': ppp.id,
                             'location': ppp.location,
-                            'passProfileId': ppp.PassengerProfileId,
+                            'passProfileId': ppp.PassProfileId,
                             'passUserId': null, //will find from profiles
                             'passEmail': null
                         })
@@ -480,10 +480,10 @@ module.exports = {
                     //Now get userIds from DriverprofileIds
                     ppps.forEach(function(ppp){
                         console.log('Find userID')
-                        PassProfile.findByPk(ppp.passProfileId)                        
+                        PassProfile.findByPk(ppp.passProfileId)                                          
                         .then((pp)=>{ //return pass profile now called pp
                             //Now record passenger's userId
-                            console.log('UserId Found', pp.UserId)
+                            console.log('***UserId Found', pp.UserId)
                             ppp.passUserId = pp.UserId
                             User.findByPk(pp.UserId)
                             .then((user)=>{
