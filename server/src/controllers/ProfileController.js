@@ -440,5 +440,76 @@ module.exports = {
                 original: err
             })
         }
+    },
+    async getDriverPass(req, res) { // this replies to a register api request
+        const userId = req.params.userId
+        try {
+            console.log(`server: Getting drivers Pass for ${userId}`)
+            getProfileByUserId(userId, res)
+            .then( function(driver) {
+                console.log('******Driver', driver.email)
+                let locations = [];
+                //console.log('******pickup points', pass.PassProfile.PassPickupPoints)
+                for(var idx in driver.Driver.DriverWaypoints) {
+                    var loc = driver.Driver.DriverWaypoints[idx]  
+                    locations.push(loc.location);
+                }
+                console.log('****locations', locations)
+                // pass.PassProfile.PassPickupPoints.forEach(function(loc){
+                //     locations.push(loc);
+                // });
+
+                PassPickupPoints.findAll({
+                    where: {
+                        location: locations
+                    }
+                })
+                .then(function(passPickupPoints){
+                    //console.log('Drivers???',driverWaypoints);
+                    let ppps = []
+                    passPickupPoints.forEach(function(ppp){ //Driver way point
+                        dwps.push({
+                            'passPickupPointsId': ppp.id,
+                            'location': ppp.location,
+                            'passProfileId': ppp.DriverProfileId,
+                            'passUserId': null, //will find from profiles
+                            'passEmail': null
+                        })
+                    })
+                    console.log('pickupPoints', ppps)
+                    //Now get userIds from DriverprofileIds
+                    dwps.forEach(function(dwp){
+                        console.log('Find userID')
+                        PassProfile.findByPk(ppp.passProfileId)
+                        .then((pp)=>{ //return pass profile now called pp
+                            //Now record passenger's userId
+                            console.log('UserId Found', pp.UserId)
+                            ppp.passUserId = dp.UserId
+                            User.findByPk(pp.UserId)
+                            .then((user)=>{
+                                ppp.passEmail = user.email
+                            })
+                             .then(()=>{
+                                console.log('userIds', ppps) 
+                                //send the result back to browser
+                                return res.send({
+                                    PassPickupPoints: ppps, // send the new user object to front end
+                                    // passProfile: passprofile.toJSON(),
+                                    success: `Driver Passenger Found for driver ${driver.email}`
+                                })
+                            })
+                        })
+                       
+                    })                     
+                    
+                })
+            })
+        } catch (err) {
+            console.log(`An error occurred getting Passenger Schedule for user ${userId} ${err}`)
+            return res.status(500).send({
+                error: `An error occurred getting Passenger Schedule for user ${userId}`,
+                original: err
+            })
+        }
     }
 }
