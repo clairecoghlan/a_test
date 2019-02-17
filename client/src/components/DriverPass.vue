@@ -35,7 +35,7 @@ export default {
         console.log('****** getDriverPass?', this.user())
         this.error = this.success = null // reset the feedback
         const res = await ProfileService.getDriverPass(this.user())
-        this.pass = res.data.passPickupPoints
+        this.drivers = res.data.passPickupPoints
         // console.log('Schedule', this.schedule)
         // this.success = res.data.success
       } catch (err) {

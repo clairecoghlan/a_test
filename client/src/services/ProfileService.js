@@ -18,6 +18,10 @@ export default {
     console.log('get Pass Drivers via Api()', user.id)
     return Api().get(`pass_drivers/${user.id}`, user)
   },
+  getDriverPass (user) {
+    console.log('get Driver Pass via Api()', user.id)
+    return Api().get(`driver_pass/${user.id}`, user)
+  },
   getLocation (location) {
 
   },

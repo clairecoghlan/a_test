@@ -450,8 +450,8 @@ module.exports = {
                 console.log('******Driver', driver.email)
                 let locations = [];
                 //console.log('******pickup points', pass.PassProfile.PassPickupPoints)
-                for(var idx in driver.Driver.DriverWaypoints) {
-                    var loc = driver.Driver.DriverWaypoints[idx]  
+                for(var idx in driver.DriverProfile.DriverWaypoints) {
+                    var loc = driver.DriverProfile.DriverWaypoints[idx]  
                     locations.push(loc.location);
                 }
                 console.log('****locations', locations)
@@ -468,23 +468,23 @@ module.exports = {
                     //console.log('Drivers???',driverWaypoints);
                     let ppps = []
                     passPickupPoints.forEach(function(ppp){ //Driver way point
-                        dwps.push({
+                        ppps.push({
                             'passPickupPointsId': ppp.id,
                             'location': ppp.location,
-                            'passProfileId': ppp.DriverProfileId,
+                            'passProfileId': ppp.PassengerProfileId,
                             'passUserId': null, //will find from profiles
                             'passEmail': null
                         })
                     })
-                    console.log('pickupPoints', ppps)
+                    console.log('******pickupPoints', ppps)
                     //Now get userIds from DriverprofileIds
-                    dwps.forEach(function(dwp){
+                    ppps.forEach(function(ppp){
                         console.log('Find userID')
-                        PassProfile.findByPk(ppp.passProfileId)
+                        PassProfile.findByPk(ppp.passProfileId)                        
                         .then((pp)=>{ //return pass profile now called pp
                             //Now record passenger's userId
                             console.log('UserId Found', pp.UserId)
-                            ppp.passUserId = dp.UserId
+                            ppp.passUserId = pp.UserId
                             User.findByPk(pp.UserId)
                             .then((user)=>{
                                 ppp.passEmail = user.email
