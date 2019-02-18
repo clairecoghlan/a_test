@@ -9,7 +9,7 @@
           td(colspan="1") Pick up Location
       tbody
 
-        tr(v-for="passengers in passengers")
+        tr(v-for="passenger in passengers")
           td {{pass.passEmail}}
           td {{pass.location}}
 </template>
