@@ -9,7 +9,7 @@
           td(colspan="1") Pick up Location
       tbody
 
-        tr(v-for="passenger in passengers")
+        tr(v-for="pass in passengers")
           td {{pass.passEmail}}
           td {{pass.location}}
 </template>
@@ -35,8 +35,9 @@ export default {
         console.log('****** getDriverPass?', this.user())
         this.error = this.success = null // reset the feedback
         const res = await ProfileService.getDriverPass(this.user())
+        console.log('*** data', res.data)
         this.passengers = res.data.passPickupPoints
-        // console.log('Schedule', this.schedule)
+        console.log('*** Passenger pickup points', this.passengers)
         // this.success = res.data.success
       } catch (err) {
         console.log('error?')

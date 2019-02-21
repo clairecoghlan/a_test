@@ -444,7 +444,7 @@ module.exports = {
     async getDriverPass(req, res) { // this replies to a register api request
         const userId = req.params.userId
         try {
-            console.log(`server: Getting drivers Pass for ${userId}`)
+            console.log(`server: Getting Passengers for Driver ${userId}`)
             getProfileByUserId(userId, res)
             .then( function(driver) {
                 console.log('******Driver', driver.email)
@@ -476,24 +476,24 @@ module.exports = {
                             'passEmail': null
                         })
                     })
-                    console.log('******pickupPoints', ppps)
+                    console.log('******pickupPoints for passengers', ppps)
                     //Now get userIds from DriverprofileIds
                     ppps.forEach(function(ppp){
-                        console.log('Find userID')
+                        console.log('Find Profile for userID')
                         PassProfile.findByPk(ppp.passProfileId)                                          
                         .then((pp)=>{ //return pass profile now called pp
                             //Now record passenger's userId
-                            console.log('***UserId Found', pp.UserId)
+                            console.log('***Profile Found', pp.UserId, 'Now find User record')
                             ppp.passUserId = pp.UserId
                             User.findByPk(pp.UserId)
                             .then((user)=>{
                                 ppp.passEmail = user.email
                             })
                              .then(()=>{
-                                console.log('userIds', ppps) 
+                                console.log('passenger pickup points', ppps) 
                                 //send the result back to browser
                                 return res.send({
-                                    PassPickupPoints: ppps, // send the new user object to front end
+                                    passPickupPoints: ppps, // send the new user object to front end
                                     // passProfile: passprofile.toJSON(),
                                     success: `Driver Passenger Found for driver ${driver.email}`
                                 })
