@@ -305,7 +305,6 @@ module.exports = {
                 updateDriverWaypoints(res,userJson)
             }
 
-
             return res.send({
                 user: user.toJSON(), // send the new user object to front end
                 // passProfile: passprofile.toJSON(),
@@ -324,6 +323,7 @@ module.exports = {
         const userId = req.params.userId;
         try {
             const user = await getProfileByUserId(userId,res);
+            console.log('User data', user)
             return res.send({
                 user: user.toJSON(), // send the new user object to front end
                 // passProfile: passprofile.toJSON(),

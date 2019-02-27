@@ -1,7 +1,7 @@
 <template lang="pug">
   .container.pl-4.pr-4.pt-2.pb-2
+    driver-schedule(name='driver-schedule', v-show="isScheduleVisible", v-bind:driverSchedule="schedule")
     v-btn(@click="getPassDrivers" dark).cyan Search
-
     table(striped)
       thead
         tr
@@ -9,17 +9,26 @@
           td(colspan="1") Pick up Location
       tbody
 
-        tr(v-for="driver in drivers")
+        tr(v-for="driver in drivers" :key="driver.driverUserId")
           td {{driver.driverEmail}}
           td {{driver.location}}
+          td
+            button(@click='showDriverSchedule(driver.driverUserId)')
+              See Schedule
 </template>
 
 <script>
 import ProfileService from '@/services/ProfileService'
+import DriverSchedule from './Modal'
 export default {
   name: 'Drivers',
+  components: {
+    DriverSchedule
+  },
   data () {
     return {
+      isScheduleVisible: false,
+      schedule: [],
       drivers: []
     }
   },
@@ -42,6 +51,19 @@ export default {
         console.log('error?')
         this.error = err.response.data.error
       }
+    },
+    async showDriverSchedule (driverUserId) {
+      console.log('Button clucked for driver', driverUserId)
+      this.isScheduleVisible = true
+      // this.schedule = ProfileService.getDriverScheduleByUserId(driverUserId)
+      const res = await ProfileService.getProfileById(driverUserId)
+      const user = res.data.user
+      console.log('driver?', user)
+      this.schedule = user.DriverProfile.DriverSchedules
+    },
+    closeModal () {
+      console.log('Close Button clucked')
+      this.isScheduleVisible = false
     }
   },
   computed: {

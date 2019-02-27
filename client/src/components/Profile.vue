@@ -119,6 +119,11 @@ export default {
         await this.getDriverProfile(user)
       }
     },
+    async getDriverScheduleByUserId (userId) {
+      const user = await ProfileService.getProfileById(userId)
+      const schedule = user.DriverProfile.DriverSchedule
+      return schedule
+    },
     async getPassengerProfile (user) {
       try {
         console.log('Getting profile for user ', user)
