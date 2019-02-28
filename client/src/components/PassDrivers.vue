@@ -13,8 +13,7 @@
           td {{driver.driverEmail}}
           td {{driver.location}}
           td
-            button(@click='showDriverSchedule(driver.driverUserId)')
-              See Schedule
+            v-btn(@click='showDriverSchedule(driver.driverUserId)' dark).cyan See Schedule
 </template>
 
 <script>

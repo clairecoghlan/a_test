@@ -12,8 +12,7 @@
       datalist#locations
         option(v-for="location in locations") {{location.toponymName}}
       br
-      v-btn(@click="refresh" icon)
-          v-icon refresh
+      v-btn(@click="refresh" dark).cyan display
       table.striped
         thead
           tr

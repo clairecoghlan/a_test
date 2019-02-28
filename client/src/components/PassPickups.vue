@@ -12,10 +12,8 @@
       datalist#locations
         option(v-for="location in locations") {{location.toponymName}}
       br
-      v-btn(@click="refresh" icon)
-          v-icon refresh
-      v-btn(@click="wpAdd()" icon)
-          v-icon add_circle
+      v-btn(@click="refresh" dark).cyan Load.
+      v-btn(@click="wpAdd()" dark).cyan add
       .text-xs-center
         table
           thead
