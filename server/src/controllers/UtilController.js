@@ -24,6 +24,7 @@ module.exports = {
     },
     async sendmail (req, res) { 
         const opts = req.body
+        // a change    
         sendmailer (opts, function(err, reply) {
                 console.log(err && err.stack);
                 console.dir(reply);
@@ -32,7 +33,8 @@ module.exports = {
     }
 }
             // {
-            //     from: 'no-reply@yourdomain.com',
+            //     
+             from: 'no-reply@yourdomain.com',
             //     to: 'test@qq.com, test@sohu.com, test@163.com ',
             //     subject: 'test sendmail',
             //     html: 'Mail of test sendmail ',
