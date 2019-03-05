@@ -10,7 +10,7 @@
       tbody
 
         tr(v-for="driver in drivers" :key="driver.driverUserId")
-          v-btn(@click='sendmail(driver.driverEmail)' dark).cyan 
+          v-btn(@click='sendmail(driver.driverEmail)' dark).cyan
             td {{driver.driverEmail}}
           td {{driver.location}}
           td
@@ -20,6 +20,7 @@
 <script>
 import ProfileService from '@/services/ProfileService'
 import DriverSchedule from './Modal'
+import Api from '@/services/Api'
 export default {
   name: 'Drivers',
   components: {
@@ -41,7 +42,7 @@ export default {
   methods: {
     async sendmail (driverEmail) {
       return Api().post(`sendmail/`, {
-        from: this.user.email, // this is the passenger 
+        from: this.user.email, // this is the passenger
         to: driverEmail,
         subject: 'A request for Car Sharing',
         html: `The passenger <b>${this.user.email}</b> would like to <b>Car Share</b> with you.<br>
