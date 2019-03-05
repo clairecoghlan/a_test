@@ -5,6 +5,8 @@
 <script>
 export default {
   name: 'Home',
+  methods: {
+  },
   data () {
     return {
     }

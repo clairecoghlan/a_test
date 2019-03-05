@@ -1,7 +1,8 @@
 const {DaysOfWeek} = require('../models')
-
+const sendmailer = require('sendmail')();
+ 
 module.exports = {
-    async setDaysOfWeek (req,res){ // this replies to a register api request
+    async setDaysOfWeek (req, res){ // this replies to a register api request
         try {
             console.log( 'server: set days of week', )
             DaysOfWeek.create({id:1,day:'Mon'})
@@ -20,5 +21,19 @@ module.exports = {
                 original: err
             })
         }
+    },
+    async sendmail (req, res) { 
+        const opts = req.body
+        sendmailer (opts, function(err, reply) {
+                console.log(err && err.stack);
+                console.dir(reply);
+            }
+        )
     }
 }
+            // {
+            //     from: 'no-reply@yourdomain.com',
+            //     to: 'test@qq.com, test@sohu.com, test@163.com ',
+            //     subject: 'test sendmail',
+            //     html: 'Mail of test sendmail ',
+            // }

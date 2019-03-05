@@ -10,7 +10,8 @@
       tbody
 
         tr(v-for="driver in drivers" :key="driver.driverUserId")
-          td {{driver.driverEmail}}
+          v-btn(@click='sendmail(driver.driverEmail)' dark).cyan 
+            td {{driver.driverEmail}}
           td {{driver.location}}
           td
             v-btn(@click='showDriverSchedule(driver.driverUserId)' dark).cyan See Schedule
@@ -38,6 +39,19 @@ export default {
     // this.getPassSchedule()
   },
   methods: {
+    async sendmail (driverEmail) {
+      return Api().post(`sendmail/`, {
+        from: this.user.email, // this is the passenger 
+        to: driverEmail,
+        subject: 'A request for Car Sharing',
+        html: `The passenger <b>${this.user.email}</b> would like to <b>Car Share</b> with you.<br>
+          If you have spare capacity, and are travelling according to your schedule.
+          Please confirm or decline by replying to this message.<br>
+          Thank you<p>
+          <b>The Car Share team</b>
+        `
+      })
+    },
     async getPassDrivers () {
       try {
         console.log('****** getPassDrivers?', this.user())

@@ -43,5 +43,8 @@ router.get('/driver_pass/:userId' ,
 router.get('/daysOfWeek' ,
     UtilController.setDaysOfWeek)   // pass request to the controller
 
+router.post('/sendmail' ,
+    UtilController.sendmail)   // pass request to the controller
+
 
 module.exports = router;
